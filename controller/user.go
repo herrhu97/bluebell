@@ -52,28 +52,19 @@ func LoginHandler(c *gin.Context) {
 		// 获取validator.ValidationErrors类型的errors
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
-			// 非validator.ValidationErrors类型错误直接返回
 			zap.L().Error("gin bind json", zap.Error(err))
-			//c.JSON(http.StatusOK, gin.H{
-			//	"msg": "请求参数格式不正确",
-			//})
 			ResponseError(c, CodeInvalidParam)
 			return
 		}
-		// validator.ValidationErrors类型错误则进行翻译
-		//c.JSON(http.StatusOK, gin.H{
-		//	"msg": removeTopStruct(errs.Translate(trans)),
-		//})
 		ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(errs.Translate(trans)))
 		return
 	}
 
 	// 2. 业务处理
-	if err := logic.Login(p); err != nil {
+	token, err := logic.Login(p)
+	if err != nil {
 		zap.L().Error("logic login failed", zap.Error(err))
-		//c.JSON(http.StatusOK, gin.H{
-		//	"msg": "登录失败",
-		//})
+
 		if errors.Is(err, mysql.ErrorUserNotExist) {
 			ResponseError(c, CodeUserNotExist)
 		} else if errors.Is(err, mysql.ErrorInvalidPassword) {
@@ -85,5 +76,5 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	// 3. 返回响应
-	ResponseSuccess(c, nil)
+	ResponseSuccess(c, token)
 }
