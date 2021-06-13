@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CtxUserIDKey 如果引用controller包的CtxUserIDKey会造成循环引用问题
 const CtxUserIDKey = "userID"
 
 var ErrorUserNotLogin = errors.New("用户未登录")

@@ -17,13 +17,14 @@ func Setup(mode string) *gin.Engine {
 	r := gin.New()
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 
+	group := r.Group("/api/v1")
 	//用户注册功能
-	r.POST("/signup", controller.SignUpHandler)
+	group.POST("/signup", controller.SignUpHandler)
 	//用户登录功能
-	r.POST("/login", controller.LoginHandler)
+	group.POST("/login", controller.LoginHandler)
 
 	//ping
-	r.GET("/ping", middlewares.JWTAuthMiddleware(), func(c *gin.Context) {
+	group.GET("/ping", middlewares.JWTAuthMiddleware(), func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")
 	})
 
