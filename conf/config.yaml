@@ -2,6 +2,8 @@ app:
 name: "bluebell"
 mode: "debug"
 port: 8081
+start_time: 2020-01-01
+machine_id: 1
 log:
   level: "debug"
   filename: "bluebell.log"

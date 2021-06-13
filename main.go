@@ -9,9 +9,11 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+	"web_app/controller"
 	"web_app/dao/mysql"
 	"web_app/dao/redis"
 	"web_app/logger"
+	"web_app/pkg/snowflake"
 	routes "web_app/routes"
 	"web_app/settings"
 
@@ -51,6 +53,16 @@ func main() {
 
 	//		5.注册路由
 	r := routes.Setup(settings.Conf.Mode)
+
+	//		初始化雪花算法
+	if err := snowflake.Init(settings.Conf.StartTime, settings.Conf.MachineID); err != nil {
+		zap.L().Error("snow flake init failed", zap.Error(err))
+	}
+
+	//		初始化校验器的翻译器
+	if err := controller.InitTrans("zh"); err != nil {
+		zap.L().Error("init validate trans failed", zap.Error(err))
+	}
 
 	//		6.启动服务（优雅关机）
 	zap.L().Info("the listen port", zap.Int("port", settings.Conf.Port))
