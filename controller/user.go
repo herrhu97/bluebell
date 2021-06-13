@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
+	"web_app/logic"
 	"web_app/model"
 
 	"github.com/go-playground/validator/v10"
@@ -42,8 +42,17 @@ func SignUpHandler(c *gin.Context) {
 	//	return
 	//}
 
-	fmt.Println(p)
 	// 2. 业务处理
-	// 3. 返回响应
+	if err := logic.SignUp(p); err != nil {
+		zap.L().Error("logic sign up failed", zap.Error(err))
+		c.JSON(http.StatusOK, gin.H{
+			"msg": "注册失败",
+		})
+		return
+	}
 
+	// 3. 返回响应
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "success",
+	})
 }
