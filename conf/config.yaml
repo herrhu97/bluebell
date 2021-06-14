@@ -4,12 +4,18 @@ mode: "dev"
 port: 8080
 start_time: 2020-01-01
 machine_id: 1
+
+auth:
+  jwt_expire: 8760
+
+
 log:
   level: "debug"
   filename: "bluebell.log"
   max_size: 200
   max_age: 30
   max_backups: 7
+
 mysql:
   host: "150.158.179.29"
   port: 3307
@@ -18,6 +24,7 @@ mysql:
   db_name: "bluebell"
   max_open_conns: 200
   max_idle_conns: 50
+
 redis:
   host: "150.158.179.29"
   port: 6379

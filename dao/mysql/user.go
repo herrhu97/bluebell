@@ -4,17 +4,10 @@ import (
 	"crypto/md5"
 	"database/sql"
 	"encoding/hex"
-	"errors"
 	"web_app/model"
 )
 
 const secret = "bluebell"
-
-var (
-	ErrorUserExist       = errors.New("用户已存在")
-	ErrorUserNotExist    = errors.New("用户不存在")
-	ErrorInvalidPassword = errors.New("用户名或密码错误")
-)
 
 func CheckUserExist(username string) (err error) {
 	sqlStr := `select count(user_id) from user where username = ?`
@@ -59,5 +52,12 @@ func Login(user *model.User) (err error) {
 	if encryptPassword(oPassword) != user.Password {
 		return ErrorInvalidPassword
 	}
+	return
+}
+
+func GetUserById(uid int64) (user *model.User, err error) {
+	user = new(model.User)
+	sqlStr := `select user_id, username from user where user_id = ?`
+	err = db.Get(user, sqlStr, uid)
 	return
 }

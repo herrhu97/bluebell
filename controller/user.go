@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"fmt"
 	"web_app/dao/mysql"
 	"web_app/logic"
 	"web_app/model"
@@ -61,7 +62,7 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	// 2. 业务处理
-	token, err := logic.Login(p)
+	user, err := logic.Login(p)
 	if err != nil {
 		zap.L().Error("logic login failed", zap.Error(err))
 
@@ -76,5 +77,9 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	// 3. 返回响应
-	ResponseSuccess(c, token)
+	ResponseSuccess(c, gin.H{
+		"user_id":   fmt.Sprintf("%d", user.UserID),
+		"user_name": user.Username,
+		"token":     user.Token,
+	})
 }
