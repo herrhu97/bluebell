@@ -25,17 +25,21 @@ func Setup(mode string) *gin.Engine {
 	v1.Use(middlewares.JWTAuthMiddleware())
 
 	{
-		//ping
+		//ping测试
 		v1.GET("/ping", func(c *gin.Context) {
 			c.String(http.StatusOK, "pong")
 		})
 
+		//帖子标签
 		v1.GET("/community", controller.CommunityHandler)
 		v1.GET("/community/:id", controller.CommunityDetailHandler)
 
+		//帖子
 		v1.POST("/post", controller.CreatePostHandler)
 		v1.GET("/post/:id", controller.GetPostHandler)
 		v1.GET("/posts", controller.GetPostListHandler)
+
+		v1.POST("/vote", controller.PostVoteController)
 	}
 
 	r.NoRoute(func(c *gin.Context) {
